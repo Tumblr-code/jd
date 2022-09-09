@@ -15,7 +15,7 @@ requests.packages.urllib3.disable_warnings()
 
 botToken="5497496239:AAH7m475zGNAkxiW6tWcqFYWJwUklf5VDI4"
 updateId = None
-listem_id=-1001656543836
+listem_id=-1001603206320
 
 s = requests.session()
 s.keep_alive = False
