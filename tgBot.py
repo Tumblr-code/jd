@@ -3,25 +3,43 @@
 # @time    : 2022/04/09 21:27
 # @author  : xiaomi
 # @desc    :tg机器人上传代码到git
-# pip install retrying
+# 依赖：
+#pip install gitpython
+#pip install retrying
+#pip install pysocks
 #
 from git import Repo
 #from turtle import update
 import requests
-import time,os, json
+import time,os, json,logging
 from retrying import retry
-
 requests.packages.urllib3.disable_warnings()
 
-botToken="5497496239:AAH7m475zGNAkxiW6tWcqFYWJwUklf5VDI4"
-updateId = None
-listem_id=-1001603206320
 
+#botToken
+botToken="5497496239:AAH7m475zGNAkxiW6tWcqFYWJwUklf5VDI4"
+#要监听的群组id
+listem_id= -1001603206320
+#代理地址  
+proxies={
+    #不需要代理禁用这两行
+   # 'http': "http://127.0.0.1:7890",
+   # 'https': "http://127.0.0.1:7890"
+}
+#基本设置，可以替代注释里的配置项
+logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)   #创建logger对象
+logger.setLevel(level=logging.INFO)
+handler = logging.FileHandler("bot.log")   #创建handler对象，保存文件
+handler.setLevel(logging.INFO)
+log_format = '[%(levelname)s TIME:%(asctime)s] %(message)s'
+formatter = logging.Formatter(log_format)
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+updateId = None
 s = requests.session()
 s.keep_alive = False
-proxy='socks5://127.0.0.1:7891'
-proxies={
-}
 
 def getUpdates(offset):
     global updateId
@@ -36,11 +54,8 @@ def getUpdates(offset):
         messages = result["result"]
         for message in messages:
             if(("message" in message)==False):
-                updateId = message["update_id"]+1 
+                updateId = message["update_id"]+1
                 break
-           # if (message["message"]["from"]["id"]!=5433065757):
-           #     updateId = message["update_id"]+1
-           #     break
             chat_id = message["message"]["chat"]["id"]
             if (message["message"]["chat"]["id"]==listem_id):
                 if("document" in message["message"]):
@@ -49,9 +64,9 @@ def getUpdates(offset):
                 else:
                     if("text" in message["message"]):
                         text = message["message"]["text"]
-                        print(message["message"]["chat"]["title"]+"("+str(message["message"]["chat"]["id"])+")消息："+text)
+                        logger.info(message["message"]["chat"]["title"]+"("+str(message["message"]["chat"]["id"])+")消息："+text)
                         if("删除 " in text):
-                            fileName = text.split( )[1]
+                            fileName = text.replace("删除 ","")
                             sendMsg(chat_id,"开始删除: "+fileName)
                             try:
                                 os.unlink(fileName)
@@ -76,9 +91,9 @@ def downFile(fileId,file_name,chat_id):
         down_res = requests.request("GET", filePathUrl, data=None, headers=None,proxies=proxies,verify=False)
         with open(file_name,"wb") as code:
             b = code.write(down_res.content)
-            print(b)
+            logger.info(b)
 
-        print("文件下载成功:"+file_name)
+        logger.info("文件下载成功:"+file_name)
         pushResult = pushFile()
         if(pushResult):
             sendMsg(chat_id,file_name+"上传成功")
@@ -94,19 +109,19 @@ def pushFile():
     try:
         g.commit("-m auto update")
     except:
-        print("没有任何改变,无须更新")
+        logger.info("没有任何改变,无须更新")
         return True
 
     try:
         push(g)
         return True
     except:
-        print("上传失败")
+        logger.info("上传失败")
         return False
 
 @retry()
 def push(git):
-    print("git push")
+    logger.info("git push")
     git.push()
 
 def sendMsg(chat_id,text):
@@ -114,7 +129,7 @@ def sendMsg(chat_id,text):
     response = requests.request("GET", url, data=None, headers=None,proxies=proxies,verify=False)
     resultStr = response.text
 if __name__ == '__main__':
-    # api.run(port=9001, debug=True, host='0.0.0.0')
+    logger.info('启动成功，开始监听群消息')
     while True:
         getUpdates(updateId)
         time.sleep(3)
