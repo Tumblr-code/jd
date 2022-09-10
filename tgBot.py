@@ -23,8 +23,8 @@ listem_id= -1001603206320
 #代理地址  
 proxies={
     #不需要代理禁用这两行
-   # 'http': "http://127.0.0.1:7890",
-   # 'https': "http://127.0.0.1:7890"
+    #'http': "http://127.0.0.1:7890",
+    #'https': "http://127.0.0.1:7890"
 }
 #基本设置，可以替代注释里的配置项
 logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -131,5 +131,8 @@ def sendMsg(chat_id,text):
 if __name__ == '__main__':
     logger.info('启动成功，开始监听群消息')
     while True:
-        getUpdates(updateId)
+        try:
+            getUpdates(updateId)
+        except:
+            logger.info("网络异常")
         time.sleep(3)
