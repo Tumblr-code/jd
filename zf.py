@@ -47,7 +47,7 @@ properties = {
 }
 
 # 缓存
-cache = FIFOCache(maxsize=properties.get("monitor_cache_size"), ttl=0, timer=time.time)
+#cache = FIFOCache(maxsize=properties.get("monitor_cache_size"), ttl=0, timer=time.time)
 
 # Telegram相关
 api_id = properties.get("api_id")
@@ -82,11 +82,12 @@ else:
 @client.on(events.NewMessage(chats=monitor_cars, pattern=r'^([0-9+\.]+(~|-)[0-9+\.]+( )+[\u4e00-\u9fa5]+( )+[\u4e00-\u9fa5]+)( )+\(gua_opencard[0-9+]+.js\)([\d\D]*)'))
 async def handler(event):
     origin = event.message.text
-    logger.info(f"识别到消息id: {event.message.id}")
-    logger.info(f"识别到消息群id: {event.message.peer_id.channel_id}")
+    #logger.info(f"识别到消息id: {event.message.id}")
+    #logger.info(f"识别到消息群id: {event.message.peer_id.channel_id}")
     m = re.findall("^([0-9+\.]+~[0-9+\.]+ +[\u4e00-\u9fa5]+ +[\u4e00-\u9fa5]+ +\(gua_opencard[0-9+]+.js\))", origin)
     logger.info(f"新脚本: {m[0]}")
-    await client.forward_messages(-1001603206320,event.message.id,event.message.peer_id.channel_id)
+    logger.info(f"消息内容: {event.message}")
+    await client.forward_messages(-1001603206320,event.message.id,event.message.peer_id.chat_id)
     await client.send_message(-1001603206320, f'新脚本:【{m[0]}】')
 
 if __name__ == "__main__":
