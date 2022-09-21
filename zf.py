@@ -39,7 +39,7 @@ properties = {
     "proxy_password": "",
     "proxy_secret": "如果proxy_type是MTProxy,则该值必填",
     "monitor_cars": [
-        -736076129
+        -1001262277911
     ],
     "monitor_auto_stops": [
         "jd_AutoOpenCard"
@@ -78,6 +78,12 @@ if properties.get("proxy"):
 else:
     client = TelegramClient("magic", api_id, api_hash, auto_reconnect=True, retry_delay=1, connection_retries=99999).start()
 
+@client.on(events.NewMessage(chats=monitor_cars, pattern=r'^开卡$'))
+async def handler(event):
+    origin = event.message.text
+    logger.info(f"识别到消息id: {event.message.id}")
+    logger.info(f"识别到消息群id: {event.message.peer_id.channel_id}")
+    await client.forward_messages(-1001603206320,event.message.id,event.message.peer_id.channel_id)
 
 @client.on(events.NewMessage(chats=monitor_cars, pattern=r'^([0-9+\.]+(~|-)[0-9+\.]+( )+[\u4e00-\u9fa5]+( )+[\u4e00-\u9fa5]+)( )+\(gua_opencard[0-9+]+.js\)([\d\D]*)'))
 async def handler(event):
@@ -87,8 +93,11 @@ async def handler(event):
     m = re.findall("^([0-9+\.]+~[0-9+\.]+ +[\u4e00-\u9fa5]+ +[\u4e00-\u9fa5]+ +\(gua_opencard[0-9+]+.js\))", origin)
     logger.info(f"新脚本: {m[0]}")
     logger.info(f"消息内容: {event.message}")
-    await client.forward_messages(-1001603206320,event.message.id,event.message.peer_id.chat_id)
+    await client.forward_messages(-1001603206320,event.message.id,event.message.peer_id.channel_id)
     await client.send_message(-1001603206320, f'新脚本:【{m[0]}】')
+    await client.forward_messages(-1001420873978,event.message.id,event.message.peer_id.channel_id)
+    await client.send_message(-1001420873978, f'新脚本:【{m[0]}】')
+
 
 if __name__ == "__main__":
     try:
