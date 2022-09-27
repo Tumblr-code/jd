@@ -1,13 +1,3 @@
-/$$
- $ @Author: smiek2121 smiek2221@126.com
- $ @Date: 2022-09-27 10:56:24
- $ @LastEditors: smiek2121 smiek2221@126.com
- $ @LastEditTime: 2022-09-27 10:58:59
- $ @FilePath: /smiek/Users/smiek/Documents/Github/smiek/gua_opencard237.js
- $ @Description: 
- $ @
- $ @Copyright (c) 2022 by smiek2121 smiek2221@126.com, All Rights Reserved. 
- $/
 /* eslint-disable */
 /*
 9.27~10.7 豪礼黄金周  智慧中国家 (gua_opencard237.js)
