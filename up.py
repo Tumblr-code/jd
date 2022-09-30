@@ -17,7 +17,7 @@ requests.packages.urllib3.disable_warnings()
 
 
 #botToken
-botToken="5477644836:AAFjeTh-oXC5coc2i8brUWvsRJR-4Pk3-gw"
+botToken="5616194596:AAHwiTM7h3R1DuBoG8tWlr-JDjUk3AayToE"
 #要监听的群组id
 listem_id= -1001384788031
 #代理地址  
