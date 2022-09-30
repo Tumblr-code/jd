@@ -17,9 +17,9 @@ requests.packages.urllib3.disable_warnings()
 
 
 #botToken
-botToken="5497496239:AAH7m475zGNAkxiW6tWcqFYWJwUklf5VDI4"
+botToken="5477644836:AAFjeTh-oXC5coc2i8brUWvsRJR-4Pk3-gw"
 #要监听的群组id
-listem_id= -1001603206320
+listem_id= -1001384788031
 #代理地址  
 proxies={
     #不需要代理禁用这两行
