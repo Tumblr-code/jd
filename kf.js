@@ -23,8 +23,8 @@
  */
 
 const $ = Env()
-const user_id = 5486328200
-const bot_token = "5638252159:AAH5Depy-7Yvlz2odo_s7juB8nUBuvBs3bc"
+const user_id = 5706701845
+const bot_token = "5928441956:AAFnWscAsu8SV0XNOtCd3FS2Kry17lAWEWE"
 if (typeof $request !== 'undefined') start()
 
 function arg() {
